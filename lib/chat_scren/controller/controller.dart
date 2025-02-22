@@ -12,23 +12,53 @@ class ChatController extends GetxController {
     log('${document.get()}');
     final DocumentSnapshot dt = await document.get();
     final val = dt.data();
-    log('${dt.data()}');
-    // log('${((val as Map)['chat'][FirebaseAuth.instance.currentUser!.email])}');
-    List lList = [];
-    lList =
-        ((val as Map)['chat'][FirebaseAuth.instance.currentUser!.email]) ?? [];
+    log('${(dt.data() as Map)['chat']}');
+    // log('${((val as Map)['chat'][FirebaseAuth.instance.currentUser!.email])}',name: 'hi');
+    if ('${(dt.data() as Map)['chat']}' == 'null') {
+      log('hai');
+      final Map<String, dynamic> msg = {
+        'isUser': true,
+        'message': message,
+        'time': DateTime.now().toString(),
+      };
 
-    final Map<String, dynamic> msg = {
-      'isUser': true,
-      'message': message,
-      'time': DateTime.now().toString(),
-    };
-    log('${lList}');
-    lList.add(msg);
-    final Map<String, dynamic> sm = {
-      '${FirebaseAuth.instance.currentUser!.email}': lList
-    };
-    await document.update({'chat': sm});
+      final Map<String, dynamic> sm = {
+        '${FirebaseAuth.instance.currentUser!.email}': [msg]
+      };
+      await document.update({'chat': sm});
+    } else {
+      if ('${((val as Map)['chat'][FirebaseAuth.instance.currentUser!.email])}' !=
+          'null') {
+        List lList = [];
+        lList = ((val as Map)['chat']
+                [FirebaseAuth.instance.currentUser!.email]) ??
+            [];
+
+        final Map<String, dynamic> msg = {
+          'isUser': true,
+          'message': message,
+          'time': DateTime.now().toString(),
+        };
+        log('${lList}');
+        lList.add(msg);
+        final Map<String, dynamic> sm = {
+          '${FirebaseAuth.instance.currentUser!.email}': lList
+        };
+        await document.update({'chat': sm});
+      } else {
+        final Map<String, dynamic> msg = {
+          'isUser': true,
+          'message': message,
+          'time': DateTime.now().toString(),
+        };
+
+        final Map<String, dynamic> sm = {
+          '${FirebaseAuth.instance.currentUser!.email}': [msg]
+        };
+        await document.update({'chat': sm});
+      }
+    }
+    fetchMessages(personId);
   }
 
   Future<void> fetchMessages(String personId) async {
@@ -40,7 +70,7 @@ class ChatController extends GetxController {
       messages = ((val as Map)['chat']
               [FirebaseAuth.instance.currentUser!.email]) ??
           [];
-          log('${messages}');
+      log('${messages}');
     } else {}
     update();
   }

@@ -48,7 +48,7 @@ class PersonGridView extends StatelessWidget {
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: MediaQuery.sizeOf(context).width < 330 ? 1 : 2,
                 childAspectRatio:
-                    MediaQuery.sizeOf(context).width < 330 ? 0.7 / 0.8 : .7,
+                    MediaQuery.sizeOf(context).width < 330 ? 0.7 / 0.8 : .55,
               ),
               itemCount: perC.catergorypeople.length,
               itemBuilder: (context, index) {

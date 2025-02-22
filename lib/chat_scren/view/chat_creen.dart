@@ -17,6 +17,7 @@ class _ChatScreenState extends State<ChatScreen> {
   void _sendMessage() {
     if (_controller.text.trim().isEmpty) return;
     chatC.sendMessage(widget.id, _controller.text);
+    _controller.clear();
   }
 
   @override
